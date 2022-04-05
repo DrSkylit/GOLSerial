@@ -1,7 +1,8 @@
 #include<iostream>
 #include<stdlib.h>
-#include <unistd.h>
+#include<unistd.h>
 #include<time.h>
+#include<sstream>
 
 struct Neighbors{
 	int i;
@@ -73,7 +74,8 @@ int getNeighbors(int **board,int i, int j, int max, struct Neighbors directions[
 	return neighbors;	
 }
 
-int main(int argc, char **argv){
+int main(int argc, char *argv[]){
+	std::stringstream str;
 	srand(time(NULL));
 	int **currCells;
 	int **succCells;
@@ -83,12 +85,23 @@ int main(int argc, char **argv){
 	int currStep = 0;
 	
 	int MAX_STEP = 40;
-	int MAX_SIZE = 25;
+	int MAX_SIZE;
 	int MAX_NEIGHBORS = 8;
 
 	int neighbors = 0;
 
 	struct Neighbors nDirections[8];
+	if(argc == 2 ){
+		MAX_SIZE = 3;
+		str << argv[1];
+		str >> MAX_SIZE;
+	}else{
+		std::cout << "you entered the wrong amount of command line arguments" << std::endl;
+		std::cout << "Using Default of 15" << std::endl;
+		MAX_SIZE = 15;
+	}
+
+
 	// Top Left
 	nDirections[0].i = -1;
 	nDirections[0].j = -1;
