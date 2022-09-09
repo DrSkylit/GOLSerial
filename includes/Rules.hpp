@@ -1,8 +1,10 @@
+#include <Cell.hpp>
+
 class Rules{
     public:
         Rules();
         ~Rules(); // destructor
-        int applyRules(int aliveNeighbors);
+        int applyRules(Cell cell, int aliveNeighbors);
 
     private:
         int rule1(int aliveNeighbors);

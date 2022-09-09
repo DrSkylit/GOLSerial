@@ -11,7 +11,7 @@ Rules::~Rules(){
     
 }
 
-int Rules::applyRules(int aliveNeighbors){
+int Rules::applyRules(Cell cell, int aliveNeighbors){
     int alive = this->rule1(aliveNeighbors);
     alive = this->rule2(aliveNeighbors);
     alive = this->rule3(aliveNeighbors);
