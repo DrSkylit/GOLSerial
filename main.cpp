@@ -78,9 +78,12 @@ void printBoard(int **board,int size){
 int main(int argc, char *argv[]){
 
 	GameOfLife gameOfLife(5,5);
-
+	int** board
 	for (int i = 0; i < 1; ++i){
-		gameOfLife.nextBoard();
+		board = gameOfLife.nextBoard();
+
+
+		//TODO SDL to view board
 	}
 
 	// std::stringstream str;
