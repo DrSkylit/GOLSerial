@@ -12,5 +12,5 @@ g++ main.cpp src/Neighbors/Neighbors.cpp src/Rules/Rules.cpp src/Cell/Cell.cpp s
 ./a.out 15 15
 
 ## Future For Project 
-Add cmake for easier compliation 
+Add cmake for easier compliation\
 Add the SDL library for the visualization 
