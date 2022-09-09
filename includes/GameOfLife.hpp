@@ -8,6 +8,7 @@ class GameOfLife{
         ~GameOfLife(); // destructor
         int** nextBoard();
         int** skipBoard(int step);
+        void printBoard();
 
     private:
         int rowSize;
@@ -16,8 +17,7 @@ class GameOfLife{
         Cell cell;
         Neighbors neighbors;
         Rules rules;
-
-        void printBoard(); 
+ 
         void initializeGame();
         int** initializeBoard();
         void fillBoard();

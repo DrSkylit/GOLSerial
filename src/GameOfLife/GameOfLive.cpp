@@ -10,8 +10,6 @@ GameOfLife::GameOfLife(int rowSize, int columnSize) {
     this->neighbors = Neighbors();
     this->rules = Rules();
     this->initializeGame();
-    this->printBoard();
-
 }
 
 GameOfLife::~GameOfLife(){
@@ -26,34 +24,19 @@ int** GameOfLife::nextBoard(){
         for (int j = 0; j < this->columnSize; ++j){
             this->cell.setCell(i,j,this->currentBoard[i][j]);
             int aliveNeighbors = this->neighbors.getAliveNeighbors(this->currentBoard,this->cell,this->rowSize,this->columnSize);
-            this->rules.applyRules(cell,aliveNeighbors);
+            int isAlive = this->rules.applyRules(cell,aliveNeighbors);
+            nextBoard[i][j] = isAlive;
         }
     }
-    //  for(int i = 0; i < MAX_SIZE; i++){
-    //      for(int j = 0; j < MAX_SIZE; j++){
-    //          int cell = currCells[i][j];
-    //          int neighbors = getNeighbors(currCells,i,j,MAX_SIZE,nDirections);
-
-    //          // program rules
-    //          if(cell == 1){
-    //              if(neighbors == 2 || neighbors == 3){
-    //                  succCells[i][j] = 1;
-    //                  continue;
-    //              }
-    //          }
-
-    //          if(cell == 0){
-    //              if(neighbors == 3){
-    //                  succCells[i][j] = 1;
-    //                  continue;
-    //              }
-    //          }
-    //          succCells[i][j] = 0;
-    //      }
+    this->currentBoard = this->copyBoard(this->currentBoard, nextBoard);
+    delete nextBoard;
     return this->currentBoard;
 }
 
 int** GameOfLife::skipBoard(int step){
+    for (int i = 0; i < step; ++i){
+        this->currentBoard = this->nextBoard();    
+    }
     return this->currentBoard;
 }
 
@@ -97,5 +80,5 @@ int** GameOfLife::copyBoard(int** board1,int** board2){
             board1[i][j] = board2[i][j];
         }
     }
-    return board2;
+    return board1;
 }

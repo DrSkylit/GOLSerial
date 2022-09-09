@@ -7,8 +7,8 @@ class Rules{
         int applyRules(Cell cell, int aliveNeighbors);
 
     private:
-        int rule1(int aliveNeighbors);
-        int rule2(int aliveNeighbors);
-        int rule3(int aliveNeighbors);
-        int rule4(int aliveNeighbors);
+        int rule1(int alive, int isAlive, int aliveNeighbors);
+        int rule2(int alive, int isAlive, int aliveNeighbors);
+        int rule3(int alive, int isAlive, int aliveNeighbors);
+        int rule4(int alive, int isAlive, int aliveNeighbors);
 };
