@@ -27,7 +27,7 @@ int main(int argc, char *argv[]){
 	GameOfLife gameOfLife(rowSize,columnSize);
 	gameOfLife.printBoard();
 	sleep(1);
-	for (int i = 0; i < 5; ++i){
+	for (int i = 0; i < 20; ++i){
 		int** board;
 		board = gameOfLife.nextBoard();
 		gameOfLife.printBoard();
