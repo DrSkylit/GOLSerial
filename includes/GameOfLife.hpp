@@ -9,6 +9,7 @@ class GameOfLife{
         int** nextBoard();
         int** skipBoard(int step);
         void printBoard();
+        int** getBoard();
 
     private:
         int rowSize;
