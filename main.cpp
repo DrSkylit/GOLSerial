@@ -12,9 +12,10 @@
 bool sdlInit(SDL_Window** window, SDL_Renderer** renderer);
 void sdlClose(SDL_Window** window, SDL_Renderer** renderer);
 void freezeUntil(int x);
+void displayGrid(SDL_Renderer** renderer, int rowSize, int columnSize);
 
-const int SCREEN_WIDTH = 640;
-const int SCREEN_HEIGHT = 480;
+const int SCREEN_WIDTH = 1280;
+const int SCREEN_HEIGHT = 960;
 
 bool sdlInit(SDL_Window** window, SDL_Renderer** renderer){
 	//Initialization flag
@@ -70,6 +71,31 @@ void freezeUntil(int x){
 	std::this_thread::sleep_for(std::chrono::milliseconds(x));
 }
 
+void displayGrid(GameOfLife gameOfLife, int** board, SDL_Renderer** renderer, int rowSize, int columnSize){
+	freezeUntil(150);
+	SDL_SetRenderDrawColor(*renderer,255, 255, 255, 0);
+	SDL_RenderClear(*renderer);
+	for (int i = 0; i < rowSize; ++i){
+		for (int j = 0; j < columnSize; ++j){
+			int cell = board[i][j];
+			SDL_Rect rect = {(j * columnSize) + (j*((SCREEN_WIDTH/columnSize)-columnSize)), (i * rowSize) + (i * ((SCREEN_HEIGHT/rowSize) - rowSize)), (SCREEN_WIDTH/columnSize), (SCREEN_HEIGHT/rowSize) }; 
+			if(cell == 1){
+				//Render red filled quad
+            SDL_SetRenderDrawColor(*renderer, 0, 0, 0, 0);        
+            SDL_RenderFillRect(*renderer, &rect);
+			}else{
+				//Render green outlined quad
+         	SDL_SetRenderDrawColor(*renderer, 0, 0, 0, 0);        
+         	SDL_RenderDrawRect(*renderer, &rect);
+      	}
+		}
+	}
+
+	board = gameOfLife.nextBoard();
+	// gameOfLife.printBoard();
+	//Update screen
+   SDL_RenderPresent(*renderer);
+}
 
 int main(int argc, char *argv[]){
 
@@ -105,34 +131,10 @@ int main(int argc, char *argv[]){
 	int** board;
 	board = gameOfLife.getBoard();
 
-	freezeUntil(250);
-	for (int i = 0; i < 100; ++i){
-		SDL_SetRenderDrawColor(renderer,255, 255, 255, 0);
-		SDL_RenderClear( renderer );
-		for (int i = 0; i < rowSize; ++i){
-			for (int j = 0; j < columnSize; ++j){
-				int cell = board[i][j];
-				SDL_Rect rect = {(j * columnSize) + (j*((SCREEN_WIDTH/columnSize)-columnSize)), (i * rowSize) + (i * ((SCREEN_HEIGHT/rowSize) - rowSize)), (SCREEN_WIDTH/columnSize), (SCREEN_HEIGHT/rowSize) }; 
-				if(cell == 1){
-					//Render red filled quad
-               SDL_SetRenderDrawColor( renderer, 0, 0, 0, 0 );        
-               SDL_RenderFillRect( renderer, &rect );
-				}else{
-					//Render green outlined quad
-            	SDL_SetRenderDrawColor( renderer, 0, 0, 0, 0 );        
-            	SDL_RenderDrawRect( renderer, &rect );
-         	}
-			}
-		}
-		board = gameOfLife.nextBoard();
-		// gameOfLife.printBoard();
-		freezeUntil(250);
-		//Update screen
-      SDL_RenderPresent( renderer );
-	}
-
-	// game lloop flag
+	// game loop flags
 	bool quit = false;
+	bool pause = false;
+	bool next = false;
 	// event handler
 	SDL_Event e;
 
@@ -143,7 +145,33 @@ int main(int argc, char *argv[]){
 			if(e.type == SDL_QUIT){
 				quit = true;
 			}
+			// handle keydown events
+			if(e.type == SDL_KEYDOWN){
+				switch(e.key.keysym.sym){
+					case SDLK_SPACE:
+						if(pause == false){
+							pause = true;
+						}else{
+							pause = false;
+						}
+						break;
+					case SDLK_RIGHT:
+						next = true;
+						break;
+					default:
+						break;
+				}
+			}
 		}
+		// check if the board should be paused
+		if(!pause){
+			displayGrid(gameOfLife, board, &renderer, rowSize, columnSize);
+	   }else{
+	   	if(next == true){
+	   		displayGrid(gameOfLife, board, &renderer, rowSize, columnSize);
+	   		next = false;
+	   	}
+	   }
 	}
 
 	sdlClose(&window,&renderer);
