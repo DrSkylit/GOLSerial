@@ -15,6 +15,7 @@ make
 ```
 make sure cmake is installed and the correct version is being pointed to in the CMakeLists.txt file
 ## Run 
+export LD_LIBRARY_PATH=/usr/local/lib
 ./GOLSerial <rowSize> <columnSize>
 
 ### Example

@@ -6,8 +6,9 @@
 #include<GameOfLife.hpp>
 #include<SDL2/SDL.h>
 #include<SDL2/SDL_image.h>
-#include <chrono>
-#include <thread>
+#include<SDL2/SDL_ttf.h>
+#include<chrono>
+#include<thread>
 
 bool sdlInit(SDL_Window** window, SDL_Renderer** renderer);
 void sdlClose(SDL_Window** window, SDL_Renderer** renderer);
@@ -16,6 +17,10 @@ void displayGrid(SDL_Renderer** renderer, int rowSize, int columnSize);
 
 const int SCREEN_WIDTH = 1280;
 const int SCREEN_HEIGHT = 960;
+const int MAX_ROW_SIZE = 90;
+const int MAX_COLUIMN_SIZE = 125;
+int CELL_SIZE = 10;
+// int CELL_SIZE = 25;
 
 bool sdlInit(SDL_Window** window, SDL_Renderer** renderer){
 	//Initialization flag
@@ -38,8 +43,7 @@ bool sdlInit(SDL_Window** window, SDL_Renderer** renderer){
 		if( *window == NULL ){
 			printf( "Window could not be created! SDL Error: %s\n", SDL_GetError() );
 			success = false;
-		}
-		else{
+		}else{
 			//Create renderer for window
 			*renderer = SDL_CreateRenderer( *window, -1, SDL_RENDERER_ACCELERATED );
 			if(*renderer == NULL ){
@@ -51,6 +55,10 @@ bool sdlInit(SDL_Window** window, SDL_Renderer** renderer){
 				SDL_SetRenderDrawColor( *renderer, 0xFF, 0xFF, 0xFF, 0xFF );
 			}
 		}
+		if(TTF_Init() == -1 ){
+      	printf( "SDL_ttf could not initialize! SDL_ttf Error: %s\n", TTF_GetError() );
+         success = false;
+      }
 	}
 
 	return success;
@@ -78,14 +86,19 @@ void displayGrid(GameOfLife gameOfLife, int** board, SDL_Renderer** renderer, in
 	for (int i = 0; i < rowSize; ++i){
 		for (int j = 0; j < columnSize; ++j){
 			int cell = board[i][j];
-			SDL_Rect rect = {(j * columnSize) + (j*((SCREEN_WIDTH/columnSize)-columnSize)), (i * rowSize) + (i * ((SCREEN_HEIGHT/rowSize) - rowSize)), (SCREEN_WIDTH/columnSize), (SCREEN_HEIGHT/rowSize) }; 
+			// SDL_Rect rect = {(j * columnSize) + (j*((SCREEN_WIDTH/columnSize)-columnSize)), (i * rowSize) + (i * ((SCREEN_HEIGHT/rowSize) - rowSize)), (SCREEN_WIDTH/columnSize), (SCREEN_HEIGHT/rowSize) }; 
+			// SDL_Rect rect = {(j * 25) + ((SCREEN_WIDTH/2) - ((columnSize * 25)/2)), (i * 25), 25, 25}; 
+			SDL_Rect rect = {(j * CELL_SIZE) + (SCREEN_WIDTH/2) - (CELL_SIZE/2) * columnSize, (i * CELL_SIZE) + 15, CELL_SIZE, CELL_SIZE}; 
+			SDL_Rect rect1 = {((j * CELL_SIZE) + (SCREEN_WIDTH/2) - (CELL_SIZE/2) * columnSize)+1, ((i * CELL_SIZE) + 15)+1, CELL_SIZE-2, CELL_SIZE-2}; 
 			if(cell == 1){
 				//Render red filled quad
-            SDL_SetRenderDrawColor(*renderer, 0, 0, 0, 0);        
-            SDL_RenderFillRect(*renderer, &rect);
+            SDL_SetRenderDrawColor(*renderer, 114, 162, 241, 0);        
+            SDL_RenderFillRect(*renderer, &rect1);
+            SDL_SetRenderDrawColor(*renderer, 120, 120, 120, 0);        
+         	SDL_RenderDrawRect(*renderer, &rect);
 			}else{
-				//Render green outlined quad
-         	SDL_SetRenderDrawColor(*renderer, 0, 0, 0, 0);        
+				// Render green outlined quad
+         	SDL_SetRenderDrawColor(*renderer, 120, 120, 120, 0);        
          	SDL_RenderDrawRect(*renderer, &rect);
       	}
 		}
@@ -118,6 +131,14 @@ int main(int argc, char *argv[]){
 		stream1 >> rowSize;
 		stream2 << argv[2];
 		stream2 >> columnSize;
+		if(rowSize > MAX_ROW_SIZE){
+			std::cout << "The max row size is 90, you entered " << rowSize << " defaulting to 90" << std::endl;
+			rowSize = MAX_ROW_SIZE;
+		}
+		if(columnSize > MAX_COLUIMN_SIZE){
+			std::cout << "The max column size is 125, you entered " << columnSize << " defaulting to 125" << std::endl;
+			columnSize  = MAX_COLUIMN_SIZE;
+		}
 	}else{
 		std::cout << "you entered the wrong amount of command line arguments" << std::endl;
 		std::cout << "Using Default of 15" << std::endl;
@@ -133,11 +154,11 @@ int main(int argc, char *argv[]){
 
 	// game loop flags
 	bool quit = false;
-	bool pause = false;
+	bool pause = true;
 	bool next = false;
 	// event handler
 	SDL_Event e;
-
+	displayGrid(gameOfLife, board, &renderer, rowSize, columnSize);
 	while(!quit){
 		// Handle events on queue 
 		while(SDL_PollEvent(&e) != 0){
@@ -163,7 +184,7 @@ int main(int argc, char *argv[]){
 				}
 			}
 		}
-		// check if the board should be paused
+		// check if the board is paused
 		if(!pause){
 			displayGrid(gameOfLife, board, &renderer, rowSize, columnSize);
 	   }else{

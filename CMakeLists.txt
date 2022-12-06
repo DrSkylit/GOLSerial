@@ -15,4 +15,4 @@ include_directories(${CMAKE_SOURCE_DIR}/includes)
 
 include_directories(usr/local/include/SDL2)
 target_link_directories(GOLSerial PRIVATE usr/local/lib)
-target_link_libraries(GOLSerial PRIVATE SDL2)
+target_link_libraries(GOLSerial PRIVATE SDL2 SDL2_ttf)
