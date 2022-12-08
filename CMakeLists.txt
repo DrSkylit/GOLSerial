@@ -10,6 +10,8 @@ set(
     src/GameOfLife/GameOfLife.cpp
 )
 
+set(CMAKE_BUILD_RPATH "/usr/local/lib")
+
 add_executable(GOLSerial ${SOURCES})
 include_directories(${CMAKE_SOURCE_DIR}/includes)
 

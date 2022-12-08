@@ -14,6 +14,7 @@ bool sdlInit(SDL_Window** window, SDL_Renderer** renderer);
 void sdlClose(SDL_Window** window, SDL_Renderer** renderer);
 void freezeUntil(int x);
 void displayGrid(SDL_Renderer** renderer, int rowSize, int columnSize);
+void displayText(SDL_Renderer** renderer,TTF_Font* font,SDL_Color textColor, std::string text);
 
 const int SCREEN_WIDTH = 1280;
 const int SCREEN_HEIGHT = 960;
@@ -55,6 +56,7 @@ bool sdlInit(SDL_Window** window, SDL_Renderer** renderer){
 				SDL_SetRenderDrawColor( *renderer, 0xFF, 0xFF, 0xFF, 0xFF );
 			}
 		}
+
 		if(TTF_Init() == -1 ){
       	printf( "SDL_ttf could not initialize! SDL_ttf Error: %s\n", TTF_GetError() );
          success = false;
@@ -72,6 +74,7 @@ void sdlClose(SDL_Window** window, SDL_Renderer** renderer){
 	*renderer = NULL;
 
 	//Quit SDL subsystems
+	TTF_Quit();
 	SDL_Quit();
 }
 
@@ -107,19 +110,55 @@ void displayGrid(GameOfLife gameOfLife, int** board, SDL_Renderer** renderer, in
 	board = gameOfLife.nextBoard();
 	// gameOfLife.printBoard();
 	//Update screen
-   SDL_RenderPresent(*renderer);
+}
+
+void displayText(SDL_Renderer* renderer,TTF_Font* font,SDL_Color textColor, std::string text){
+	int w;
+	int h;
+	// create a new text  surface
+	SDL_Surface* textSurface = TTF_RenderText_Solid( font, text.c_str(), textColor );
+	if( textSurface == NULL ){
+        printf( "Unable to render text surface! SDL_ttf Error: %s\n", TTF_GetError() );
+   }
+   // create texture from surface
+   SDL_Texture* textTexture = SDL_CreateTextureFromSurface(renderer, textSurface);
+
+   // gets the corrct width and height of the font given the text 
+   TTF_SizeText(font,text.c_str(),&w,&h);
+
+   SDL_Rect textPosition; 
+	textPosition.x = 20;  
+	textPosition.y = 20; 
+	textPosition.w = w; 
+	textPosition.h = h;
+
+	// copys texture to the renderer
+	SDL_RenderCopy(renderer, textTexture, NULL, &textPosition);
+
+	// free up space 
+	SDL_FreeSurface(textSurface);
+	SDL_DestroyTexture(textTexture);
+	textSurface = NULL;
+	textTexture = NULL;
 }
 
 int main(int argc, char *argv[]){
 
-	// the window we will  be rendering too
+	// the window we will be rendering too
 	SDL_Window* window = NULL;
 	SDL_Renderer* renderer = NULL;
+	int frame = 0;
 
 	if(!sdlInit(&window,&renderer)){
 		printf( "Failed to initialize!\n" );
 		return 0;
 	}
+
+	TTF_Font* font = TTF_OpenFont( "../fonts/alagard.ttf", 20 );
+	if(font == NULL){
+		printf( "Failed to load lazy font! SDL_ttf Error: %s\n", TTF_GetError() );
+	}
+	SDL_Color textColor = { 0, 0, 0 };
 
 	std::stringstream stream1;
 	std::stringstream stream2;
@@ -187,12 +226,17 @@ int main(int argc, char *argv[]){
 		// check if the board is paused
 		if(!pause){
 			displayGrid(gameOfLife, board, &renderer, rowSize, columnSize);
+			frame = frame + 1;
 	   }else{
 	   	if(next == true){
 	   		displayGrid(gameOfLife, board, &renderer, rowSize, columnSize);
+	   		frame = frame + 1;
 	   		next = false;
 	   	}
 	   }
+	   std::string frameText = "Frame: " + std::to_string(frame);
+	   displayText(renderer,font,textColor,frameText);
+	   SDL_RenderPresent(renderer);
 	}
 
 	sdlClose(&window,&renderer);
