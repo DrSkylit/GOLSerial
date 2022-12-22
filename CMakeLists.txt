@@ -8,7 +8,8 @@ set(
     src/Rules/Rules.cpp
     src/Neighbors/Neighbors.cpp
     src/GameOfLife/GameOfLife.cpp
-)
+    src/TextLoader/TextLoader.cpp
+)   
 
 set(CMAKE_BUILD_RPATH "/usr/local/lib")
 

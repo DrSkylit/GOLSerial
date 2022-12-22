@@ -1,5 +1,5 @@
 # GOLSerial
-This is a serial version of Johm Conway's Game Of Life built in c++ 
+This is a serial version of Johm Conway's Game Of Life built in c++ and shown using the SDL library
 
 
 ## Complie g++ or cmake
