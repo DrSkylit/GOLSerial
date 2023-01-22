@@ -22,7 +22,6 @@ const int SCREEN_HEIGHT = 960;
 const int MAX_ROW_SIZE = 90;
 const int MAX_COLUIMN_SIZE = 125;
 int CELL_SIZE = 10;
-// int CELL_SIZE = 25;
 const SDL_Color SDL_COLOR_BLACK = { 0, 0, 0 };
 
 bool sdlInit(SDL_Window** window, SDL_Renderer** renderer){
@@ -91,8 +90,6 @@ void displayGrid(GameOfLife gameOfLife, int** board, SDL_Renderer** renderer, in
 	for (int i = 0; i < rowSize; ++i){
 		for (int j = 0; j < columnSize; ++j){
 			int cell = board[i][j];
-			// SDL_Rect rect = {(j * columnSize) + (j*((SCREEN_WIDTH/columnSize)-columnSize)), (i * rowSize) + (i * ((SCREEN_HEIGHT/rowSize) - rowSize)), (SCREEN_WIDTH/columnSize), (SCREEN_HEIGHT/rowSize) }; 
-			// SDL_Rect rect = {(j * 25) + ((SCREEN_WIDTH/2) - ((columnSize * 25)/2)), (i * 25), 25, 25}; 
 			SDL_Rect rect = {(j * CELL_SIZE) + (SCREEN_WIDTH/2) - (CELL_SIZE/2) * columnSize, (i * CELL_SIZE) + 15, CELL_SIZE, CELL_SIZE}; 
 			SDL_Rect rect1 = {((j * CELL_SIZE) + (SCREEN_WIDTH/2) - (CELL_SIZE/2) * columnSize)+1, ((i * CELL_SIZE) + 15)+1, CELL_SIZE-2, CELL_SIZE-2}; 
 			if(cell == 1){
@@ -110,8 +107,6 @@ void displayGrid(GameOfLife gameOfLife, int** board, SDL_Renderer** renderer, in
 	}
 
 	board = gameOfLife.nextBoard();
-	// gameOfLife.printBoard();
-	//Update screen
 }
 
 int main(int argc, char *argv[]){
@@ -125,10 +120,17 @@ int main(int argc, char *argv[]){
 		printf( "Failed to initialize!\n" );
 		return 0;
 	}
-
+	// works for cmake
 	TTF_Font* font = TTF_OpenFont( "../fonts/alagard.ttf", 20 );
 	if(font == NULL){
+		// works for g++
+		font = TTF_OpenFont( "fonts/alagard.ttf", 20 );
+	}
+
+	if(font == NULL){
+		font = TTF_OpenFont( "../fonts/alagard.ttf", 20 );
 		printf( "Failed to load font! SDL_ttf Error: %s\n", TTF_GetError() );
+		return 0;
 	}
 	
 
@@ -211,6 +213,12 @@ int main(int argc, char *argv[]){
 	   TextLoader frameText(font);
 	   frameText.setPosition(20,(((CELL_SIZE) * rowSize) + 20));
 	   frameText.render(renderer,SDL_COLOR_BLACK,frame1,rowSize);
+
+	   std::string desc = "Press Space To play/pause, Once paused you can Press the forward ARROW to move one frame at a time";
+	   TextLoader descText(font);
+	   descText.setPosition(20,(((CELL_SIZE) * rowSize) + 35));
+	   descText.render(renderer,SDL_COLOR_BLACK,desc,rowSize);
+
 	   
 	   SDL_RenderPresent(renderer);
 

@@ -35,7 +35,6 @@ void TextLoader::render(SDL_Renderer* renderer,SDL_Color textColor, std::string 
 
    SDL_Rect textPosition; 
     textPosition.x = this->position.x;  
-    // textPosition.y = (((CELL_SIZE) * rows) + 20); 
     textPosition.y = this->position.y;
     textPosition.w = w; 
     textPosition.h = h;

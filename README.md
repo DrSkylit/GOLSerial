@@ -1,10 +1,9 @@
 # GOLSerial
-This is a serial version of Johm Conway's Game Of Life built in c++ and shown using the SDL library
-
+This is a serial version of John Conway's Game Of Life built in c++ and visualized using the SDL library
 
 ## Complie g++ or cmake
 ### g++
-g++ -o GOLSerial main.cpp src/Neighbors/Neighbors.cpp src/Rules/Rules.cpp src/Cell/Cell.cpp src/GameOfLife/GameOfLife.cpp -Iincludes/
+g++ -o GOLSerial main.cpp src/Neighbors/Neighbors.cpp src/Rules/Rules.cpp src/Cell/Cell.cpp src/TextLoader/TextLoader.cpp src/GameOfLife/GameOfLife.cpp -Iincludes/ -lSDL2 -lSDL2_ttf
 
 ### cmake
 ```
@@ -13,9 +12,13 @@ mkdir build
 cmake ..
 make
 ```
-make sure cmake is installed and the correct version is being pointed to in the CMakeLists.txt file
-## Run 
-export LD_LIBRARY_PATH=/usr/local/lib
+### Libraries
+
+* SDL (https://github.com/libsdl-org/SDL)
+* SDL_ttf (https://github.com/libsdl-org/SDL_ttf)
+
+Make sure SDL and SDL_ttf is installed and you are pointed to the correct versions in the CMakeLists.txt file
+
 ./GOLSerial <rowSize> <columnSize>
 
 ### Example
@@ -23,4 +26,4 @@ export LD_LIBRARY_PATH=/usr/local/lib
 
 ## Future For Project 
 - [x] Add cmake for easier compliation\
-Add the SDL library for the visualization 
+- [x]Add the SDL library for the visualization 
