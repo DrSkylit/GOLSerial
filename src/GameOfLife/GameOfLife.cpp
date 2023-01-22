@@ -50,6 +50,10 @@ void GameOfLife::printBoard(){
     }
 }
 
+int** GameOfLife::getBoard(){
+    return this->currentBoard;
+}
+
 void GameOfLife::initializeGame(){
     this->currentBoard = this->initializeBoard();
     this->fillBoard();
