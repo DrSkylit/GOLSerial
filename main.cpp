@@ -214,6 +214,16 @@ int main(int argc, char *argv[]){
 	   frameText.setPosition(20,(((CELL_SIZE) * rowSize) + 20));
 	   frameText.render(renderer,SDL_COLOR_BLACK,frame1,rowSize);
 
+	   std::string rowStr = "Row: " + std::to_string(rowSize);
+	   TextLoader rowText(font);
+	   rowText.setPosition(150,(((CELL_SIZE) * rowSize) + 20));
+	   rowText.render(renderer,SDL_COLOR_BLACK,rowStr,rowSize);
+
+	  	std::string columnStr = "Column: " + std::to_string(columnSize);
+	   TextLoader columnText(font);
+	   columnText.setPosition(250,(((CELL_SIZE) * rowSize) + 20));
+	   columnText.render(renderer,SDL_COLOR_BLACK,columnStr,rowSize);
+
 	   std::string desc = "Press Space To play/pause, Once paused you can Press the forward ARROW to move one frame at a time";
 	   TextLoader descText(font);
 	   descText.setPosition(20,(((CELL_SIZE) * rowSize) + 35));

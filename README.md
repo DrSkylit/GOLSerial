@@ -21,6 +21,10 @@ Make sure SDL and SDL_ttf is installed and you are pointed to the correct versio
 
 ./GOLSerial <rowSize> <columnSize>
 
+The Max Row size is 90
+The Max Column size is 125
+If no Row or Column is selected a default of 15 by 15 will be selected
+
 ### Example
 ./GOLSerial 15 15
 
