@@ -30,6 +30,11 @@ If no Row or Column is selected a default of 15 by 15 will be selected
 ### Example
 ./GOLSerial 15 15
 
+### Video Examples
+[Screencast from 01-22-2023 06:06:13 PM.webm](https://user-images.githubusercontent.com/29786223/213950922-74ff39d7-dcbf-4307-92c1-27aa3f86774e.webm)
+
+[Screencast from 01-22-2023 06:07:12 PM.webm](https://user-images.githubusercontent.com/29786223/213950938-453813fe-3225-40a5-b5b6-9c1f4ecb56d4.webm)
+
 ## Future For Project 
 - [x] Add cmake for easier compliation\
 - [x]Add the SDL library for the visualization 
